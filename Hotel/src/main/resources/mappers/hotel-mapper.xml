@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="web.project.spring.HotelMapper">
+	<!-- 별점 높은 순 정렬 -->
+	<select resultType="HotelVO" id="select_order_by_star">
+      select * from(select rownum rn, a.* from(
+          select i.*
+          from ${hotel_info} i
+              join ${hotel_room} ro
+              on i.${hotel_no} = ro.${room_hotel_no}
+              left outer join ${reserved_room} rro
+              on ro.${room_no} = rro.${reserved_room_no}
+              and (rro.${reserved_check_in}+1 between <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD') and TO_DATE(#{check_out}, 'YYYY-MM-DD')]]>
+              	   or rro.${reserved_check_out}-1 between <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD') and TO_DATE(#{check_out}, 'YYYY-MM-DD')]]>
+              	   or <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD')]]> between rro.${reserved_check_in} and rro.${reserved_check_out}-1
+              	   or <![CDATA[TO_DATE(#{check_out}, 'YYYY-MM-DD')]]> between rro.${reserved_check_in}+1 and rro.${reserved_check_out})
+          where rro.${reserved_no} is null
+          and (i.${hotel_addr} like #{keyword} or i.${hotel_name} like #{keyword})
+          and ro.${room_person} <![CDATA[>=]]> #{person}
+          group by i.${hotel_no}, i.${hotel_name}, i.${hotel_addr}, i.${hotel_phone}, i.${hotel_comment},
+                   i.${hotel_low_price}, i.${hotel_star}, i.${hotel_review_count}, i.${hotel_latitude}, i.${hotel_longitude}, i.${hotel_like_count}
+          order by i.${hotel_star} desc)a
+      )b where rn between #{start} and #{end}
+   </select>
+	
+	<!-- 리뷰 높은 순 정렬 -->
+	<select resultType="HotelVO" id="select_order_by_review_count">
+      select * from(select rownum rn, a.* from(
+          select i.*
+          from ${hotel_info} i
+              join ${hotel_room} ro
+              on i.${hotel_no} = ro.${room_hotel_no}
+              left outer join ${reserved_room} rro
+              on ro.${room_no} = rro.${reserved_room_no}
+              and (rro.${reserved_check_in}+1 between <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD') and TO_DATE(#{check_out}, 'YYYY-MM-DD')]]>
+              	   or rro.${reserved_check_out}-1 between <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD') and TO_DATE(#{check_out}, 'YYYY-MM-DD')]]>
+              	   or <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD')]]> between rro.${reserved_check_in} and rro.${reserved_check_out}-1
+              	   or <![CDATA[TO_DATE(#{check_out}, 'YYYY-MM-DD')]]> between rro.${reserved_check_in}+1 and rro.${reserved_check_out})
+          where rro.${reserved_no} is null
+          and (i.${hotel_addr} like #{keyword} or i.${hotel_name} like #{keyword})
+          and ro.${room_person} <![CDATA[>=]]> #{person}
+          group by i.${hotel_no}, i.${hotel_name}, i.${hotel_addr}, i.${hotel_phone}, i.${hotel_comment},
+                   i.${hotel_low_price}, i.${hotel_star}, i.${hotel_review_count}, i.${hotel_latitude}, i.${hotel_longitude}, i.${hotel_like_count}
+          order by i.${hotel_review_count} desc)a
+      )b where rn between #{start} and #{end}
+	</select>
+	
+	<!-- 최저가격순 정렬 -->
+	<select resultType="HotelVO" id="select_order_by_low_price">
+      select * from(select rownum rn, a.* from(
+          select i.*
+          from ${hotel_info} i
+              join ${hotel_room} ro
+              on i.${hotel_no} = ro.${room_hotel_no}
+              left outer join ${reserved_room} rro
+              on ro.${room_no} = rro.${reserved_room_no}
+              and (rro.${reserved_check_in}+1 between <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD') and TO_DATE(#{check_out}, 'YYYY-MM-DD')]]>
+              	   or rro.${reserved_check_out}-1 between <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD') and TO_DATE(#{check_out}, 'YYYY-MM-DD')]]>
+              	   or <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD')]]> between rro.${reserved_check_in} and rro.${reserved_check_out}-1
+              	   or <![CDATA[TO_DATE(#{check_out}, 'YYYY-MM-DD')]]> between rro.${reserved_check_in}+1 and rro.${reserved_check_out})
+          where rro.${reserved_no} is null
+          and (i.${hotel_addr} like #{keyword} or i.${hotel_name} like #{keyword})
+          and ro.${room_person} <![CDATA[>=]]> #{person}
+          group by i.${hotel_no}, i.${hotel_name}, i.${hotel_addr}, i.${hotel_phone}, i.${hotel_comment},
+                   i.${hotel_low_price}, i.${hotel_star}, i.${hotel_review_count}, i.${hotel_latitude}, i.${hotel_longitude}, i.${hotel_like_count}
+          order by i.${hotel_low_price})a
+      )b where rn between #{start} and #{end}
+	</select>
+
+	<!-- 최고가격순 정렬 -->
+	<select resultType="HotelVO" id="select_order_by_high_price">
+      select * from(select rownum rn, a.* from(
+          select i.*
+          from ${hotel_info} i
+              join ${hotel_room} ro
+              on i.${hotel_no} = ro.${room_hotel_no}
+              left outer join ${reserved_room} rro
+              on ro.${room_no} = rro.${reserved_room_no}
+              and (rro.${reserved_check_in}+1 between <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD') and TO_DATE(#{check_out}, 'YYYY-MM-DD')]]>
+              	   or rro.${reserved_check_out}-1 between <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD') and TO_DATE(#{check_out}, 'YYYY-MM-DD')]]>
+              	   or <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD')]]> between rro.${reserved_check_in} and rro.${reserved_check_out}-1
+              	   or <![CDATA[TO_DATE(#{check_out}, 'YYYY-MM-DD')]]> between rro.${reserved_check_in}+1 and rro.${reserved_check_out})
+          where rro.${reserved_no} is null
+          and (i.${hotel_addr} like #{keyword} or i.${hotel_name} like #{keyword})
+          and ro.${room_person} <![CDATA[>=]]> #{person}
+          group by i.${hotel_no}, i.${hotel_name}, i.${hotel_addr}, i.${hotel_phone}, i.${hotel_comment},
+                   i.${hotel_low_price}, i.${hotel_star}, i.${hotel_review_count}, i.${hotel_latitude}, i.${hotel_longitude}, i.${hotel_like_count}
+          order by i.${hotel_low_price} desc)a
+      )b where rn between #{start} and #{end}
+	</select>
+	
+	<!-- 게시판에서 호텔을 클릭했을 때 -->
+ 	<select resultType="HotelVO" id="select_hotel_info">
+		select * from ${hotel_info}
+		where ${hotel_no} = #{hotel_no} 
+	</select>
+	
+	<!-- list에서 호텔을 클릭했을때 -> detail -->
+	<select resultType="RoomVO" id="select_detail_for_room">
+		select ${room_no}, ${room_name}, ${room_person}, ${room_per_price}, ${room_hotel_no} 
+		from (select * from ${hotel_room}
+			  left outer join ${reserved_room}
+			  on ${hotel_room}.${room_no} = ${reserved_room}.${reserved_room_no}
+			      and (${reserved_check_in}+1 between <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD') and TO_DATE(#{check_out}, 'YYYY-MM-DD')]]>
+			      or ${reserved_check_out}-1 between <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD') and TO_DATE(#{check_out}, 'YYYY-MM-DD')]]>
+			      or <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD')]]> between ${reserved_check_in} and ${reserved_check_out}-1
+			      or <![CDATA[TO_DATE(#{check_out}, 'YYYY-MM-DD')]]> between ${reserved_check_in}+1 and ${reserved_check_out})
+			  where ${reserved_room}.${reserved_no} is null
+			  order by ${room_per_price} asc) ${hotel_room}
+		where ${hotel_room}.${room_hotel_no} = #{hotel_no}
+			  and ${room_person} <![CDATA[>=]]> #{person}
+	</select>
+	
+	<!-- 검색한 결과의 total_count == page처리를 위한 total_count -->
+	<select resultType="Integer" id="total_count">
+		select count(*) total_cnt
+		from(select i.*
+	         from ${hotel_info} i
+	             join ${hotel_room} ro
+	             on i.${hotel_no} = ro.${room_hotel_no}
+	             left outer join ${reserved_room} rro
+	             on ro.${room_no} = rro.${reserved_room_no}
+	             and (rro.${reserved_check_in}+1 between <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD') and TO_DATE(#{check_out}, 'YYYY-MM-DD')]]>
+	             	  or rro.${reserved_check_out}-1 between <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD') and TO_DATE(#{check_out}, 'YYYY-MM-DD')]]>
+	             	  or <![CDATA[TO_DATE(#{check_in}, 'YYYY-MM-DD')]]> between rro.${reserved_check_in} and rro.${reserved_check_out}-1
+	             	  or <![CDATA[TO_DATE(#{check_out}, 'YYYY-MM-DD')]]> between rro.${reserved_check_in} and rro.${reserved_check_out})
+	         where rro.${reserved_no} is null
+	         and (i.${hotel_addr} like #{keyword} or i.${hotel_name} like #{keyword})
+	         and ro.${room_person} <![CDATA[>=]]> #{person}
+	         group by i.${hotel_no}, i.${hotel_name}, i.${hotel_addr}, i.${hotel_phone}, i.${hotel_comment},
+                   i.${hotel_low_price}, i.${hotel_star}, i.${hotel_review_count}, i.${hotel_latitude}, i.${hotel_longitude}, i.${hotel_like_count}) 
+	</select>
+	
+	<!-- 호텔 좋아요를 유지할 쿠키의 hotel_info count횟수를 위한 total_count -->
+	<select resultType="Integer" id="total_hotel_count">
+		select count(*) total_cnt
+		from ${hotel_info}
+	</select>
+	
+	<!-- 리뷰 등록/삭제후 hotel_review_count 개수 추가/삭제 -->
+	<update id="update_hotel_review_count">
+		update ${hotel_info}
+		set ${hotel_review_count} = ${hotel_review_count} + #{amount}
+		where ${hotel_no} = #{hotel_no}
+	</update>
+	
+	<!-- 리뷰 등록/삭제후 hotel_star 평점 update -->
+	<update id="update_hotel_star">
+		update ${hotel_info}
+		set ${hotel_star} = (select NVL(round(avg(${review_star}), 1), 0) <!-- 1 : 소숫점 첫째자리까지, NVL( , 0) : null일때 0으로 치환 -->
+		                    from ${hotel_review}
+		                    where ${review_hotel_no} = #{review_hotel_no} and ${review_star} != 0)
+		where ${hotel_no} = #{review_hotel_no}
+	</update>
+	
+	<!-- 호텔의 좋아요 개수 -->
+	<select id="select_like_count" resultType="Integer">
+     	select ${hotel_like_count} from ${hotel_info} where ${hotel_no} = #{hotel_no}
+   </select>
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="web.project.spring.ReviewMapper">
+	<!-- 리뷰 insert -->
+	<insert id="insert_review">
+		insert into ${hotel_review} (${review_content}, ${review_star}, ${review_img_file}, ${review_hotel_no}, ${review_room_no}, ${review_user_id}, ${review_reservation_no}, ${review_group})
+		values (#{review_content}, #{review_star}, #{review_img_file}, #{review_hotel_no}, #{review_room_no}, #{review_user_id}, #{review_reservation_no}, #{review_group})
+	</insert>
+	
+	<!-- 해당 호텔의 리뷰 불러오기 -->
+	<select id="select_all_by_review_hotel_no" resultType="ReviewVO">
+		select * from ${hotel_review}
+		where ${review_hotel_no} = #{review_hotel_no}
+		order by ${review_group} desc, ${review_date}
+	</select>
+	
+	<!-- 해당호텔의 리뷰번호를 찾아 수정페이지에 기존내용 읽어옴  -->
+	<select id="select_by_review_hotel_no_review_no" resultType="ReviewVO">
+		select * from ${hotel_review}
+		where ${review_hotel_no} = #{review_hotel_no} and ${review_no} = #{review_no}
+	</select>
+
+	<!-- 내가쓴 리뷰목록 읽어오기 (join)사용 -->
+	<resultMap type="HotelVO" id="HotelVO">
+		<result column='hotel_no' property='hotel_no'/>
+		<result column='hotel_name' property='hotel_name'/>
+	</resultMap>
+	
+	<resultMap type="RoomVO" id="RoomVO">
+		<result column='room_no' property='room_no'/>
+		<result column='room_name' property='room_name'/>
+	</resultMap>
+
+	<resultMap type="ReservationVO" id="ReservationVO">
+		<result column='reservation_no' property='reservation_no'/>
+		<result column='reservation_check_in' property='reservation_check_in'/>
+		<result column='reservation_check_out' property='reservation_check_out'/>
+	</resultMap>
+	
+	<resultMap type="ReviewVO" id="ReviewVO">
+		<result column='review_no' property='review_no'/>
+		<result column='review_img_file' property='review_img_file'/>
+		<result column='review_content' property='review_content'/>
+		<result column='review_date' property='review_date'/>
+		<result column='review_star' property='review_star'/>
+		<collection property="hotel_vo" resultMap="HotelVO"/>
+		<collection property="room_vo" resultMap="RoomVO"/>
+		<collection property="reservation_vo" resultMap="ReservationVO"/>
+	</resultMap>
+	
+	<select id="select_all_review_by_user_id" resultMap="ReviewVO">
+		select re.${review_no}, re.${review_img_file}, i.${hotel_no}, i.${hotel_name}, re.${review_content}, re.${review_date}, re.${review_star}, r.${reservation_check_in}, r.${reservation_check_out}, ro.${room_name}
+		from ${hotel_review} re
+		    join ${hotel_info} i
+		    on re.${review_hotel_no} = i.${hotel_no}
+		    join ${hotel_room} ro
+		    on re.${review_room_no} = ro.${room_no}
+		    join ${reservation} r
+		    on re.${review_reservation_no} = r.${reservation_no}
+		where ${review_user_id} = #{review_user_id}
+		order by r.${reservation_check_out} desc
+	</select>
+	
+	<!-- 해당호텔에 리뷰를 수정하여 내용 update -->
+	<update id="update_review">
+		update ${hotel_review}
+		set ${review_content} = #{review_content}, ${review_star} = #{review_star}, ${review_img_file} = #{review_img_file}
+		where ${review_no} = #{review_no}
+	</update>
+	
+	<!-- 리뷰 delete(연관된 대댓글 함께 삭제됨) -->
+	<delete id="delete_review">
+		delete from ${hotel_review}
+		where ${review_group} = #{review_no}
+	</delete>
+	
+	<!-- 대댓글 delete -->
+	<delete id="delete_reply">
+		delete from ${hotel_review}
+		where ${review_no} = #{review_no}
+	</delete>
+</mapper>

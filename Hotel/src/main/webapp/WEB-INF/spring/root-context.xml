@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd 
+					http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd 
+					http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+	<!-- DataSource Bean -->
+	<bean id="ds" class="oracle.jdbc.pool.OracleDataSource"
+		destroy-method="close">
+		<property name="dataSourceName" value="ds"></property>
+		<property name="URL"
+			value="jdbc:oracle:thin:@localhost:1521:orcl"></property>
+		<property name="user" value="hotelBooker"></property>
+		<property name="password" value="1234"></property>
+	</bean>
+	
+	<!-- SqlSessionFactory bean -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource"	ref="ds"/>
+		<property name="configLocation" value="classpath:/mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath:mappers/*.xml"/>
+		<!-- classpath:src/main/resources -->
+	</bean>
+	
+	<!-- SqlSession bean -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
+	
+	<!-- navermail설정 -->
+	<bean class="org.springframework.mail.javamail.JavaMailSenderImpl" id="mail_sender">
+		<property value="smtp.naver.com" name="host" />
+		<!-- 메일서버 호스트 -->
+		<property value="465" name="port" />
+		<!-- 메일서버 포트번호 -->
+		<property value="ehddnoops@naver.com" name="username" />
+		<!-- 자신의 이메일 아이디 -->
+		<property value="akdy9ci!" name="password" />
+		<!-- 자신의 비밀번호 -->
+		<!-- 보안연결 SSL과 관련된 설정 -->
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtps.checkserveridentity">true</prop>
+				<prop key="mail.smtps.ssl.trust">*</prop>
+				<prop key="mail.debug">true</prop>
+				<prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- gmail 설정 -->
+	<bean id="mail_sender2" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	   <property name="host" value="smtp.gmail.com" />
+	   <property name="port" value="587" />
+	   <property name="username" value="32164950@dankook.ac.kr" />
+	   <property name="password" value="hotel1234!" />
+	   <property name="javaMailProperties">
+	      <props>
+	         <prop key="mail.transport.protocol">smtp</prop>
+	         <prop key="mail.smtp.auth">true</prop>
+	         <prop key="mail.smtp.starttls.enable">true</prop>
+	         <prop key="mail.debug">true</prop>
+	      </props>
+	   </property>
+	</bean>
+	
+	<context:component-scan base-package="web.project.spring"></context:component-scan>
+
+</beans>

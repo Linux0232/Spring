@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration> 
+<!-- DB 테이블과 컬럼들을 mapper 매핑을 위한 변수 선언 -->
+<properties>
+	<!-- property-name : mapper.xml에서 사용될 이름 , value : DB테이블 및 컬럼이름 -->
+	<!-- hotel_info : 호텔 게시판 테이블 -->
+	<property name="hotel_info" value="hotel_info" />
+	<property name="hotel_no" value="hotel_no" />
+	<property name="hotel_name" value="hotel_name" />
+	<property name="hotel_addr" value="hotel_addr" />
+	<property name="hotel_phone" value="hotel_phone" />
+	<property name="hotel_comment" value="hotel_comment" />
+	<property name="hotel_low_price" value="hotel_low_price" />
+	<property name="hotel_star" value="hotel_star" />
+	<property name="hotel_review_count" value="hotel_review_count" />
+	<property name="hotel_latitude" value="hotel_latitude"/>
+	<property name="hotel_longitude" value="hotel_longitude"/>
+	<property name="hotel_like_count" value="hotel_like_count"/>
+	
+	<!-- hotel_room : 호텔 방정보 테이블 -->	
+	<property name="hotel_room" value="hotel_room"/>
+	<property name="room_no" value="room_no"/>
+	<property name="room_name" value="room_name"/>
+	<property name="room_person" value="room_person"/>
+	<property name="room_per_price" value="room_per_price"/>
+	<property name="room_hotel_no" value="room_hotel_no"/>
+	
+	<!-- reserved_room : 방 예약정보 -->
+	<property name="reserved_room" value="reserved_room"/>
+	<property name="reserved_no" value="reserved_no"/>
+	<property name="reserved_check_in" value="reserved_check_in"/>
+	<property name="reserved_check_out" value="reserved_check_out"/>
+	<property name="reserved_room_no" value="reserved_room_no"/>
+	<property name="reserved_reservation_no" value="reserved_reservation_no"/>
+	
+	<!-- hotel_user : 호텔 사용자(로그인/회원가입) 테이블 -->
+	<property name="hotel_user" value="hotel_user" />
+	<property name="user_id" value="user_id" />
+	<property name="user_pw" value="user_pw" />
+	<property name="user_name" value="user_name" />
+	<property name="user_phone" value="user_phone" />
+	<property name="user_email" value="user_email" />
+	<property name="user_birth" value="user_birth" />
+	
+	<!-- reservation : 예약자 테이블 -->
+	<property name="reservation" value="reservation"/>
+	<property name="reservation_no" value="reservation_no"/>
+	<property name="reservation_check_in" value="reservation_check_in"/>
+	<property name="reservation_check_out" value="reservation_check_out"/>
+	<property name="reservation_total_price" value="reservation_total_price"/>
+	<property name="reservation_hotel_no" value="reservation_hotel_no"/>
+	<property name="reservation_room_no" value="reservation_room_no"/>
+	<property name="reservation_user_id" value="reservation_user_id"/>
+	
+	<!-- hotel_review : 리뷰 테이블 -->
+	<property name="hotel_review" value="hotel_review"/>
+	<property name="review_no" value="review_no"/>
+	<property name="review_content" value="review_content"/>
+	<property name="review_date" value="review_date"/>
+	<property name="review_star" value="review_star"/>
+	<property name="review_img_file" value="review_img_file"/>
+	<property name="review_hotel_no" value="review_hotel_no"/>
+	<property name="review_room_no" value="review_room_no"/>
+	<property name="review_user_id" value="review_user_id"/>
+	<property name="review_reservation_no" value="review_reservation_no"/>
+	<property name="review_group" value="review_group"/>
+	
+	<!-- hotel_like : 좋아요 테이블 -->
+	<property name="hotel_like" value="hotel_like"/>
+	<property name="like_no" value="like_no"/>
+	<property name="like_hotel_no" value="like_hotel_no"/>
+	<property name="like_user_id" value="like_user_id"/>
+</properties>
+
+<typeAliases>
+	<package name="web.project.spring.domain" />
+</typeAliases>
+
+
+</configuration>

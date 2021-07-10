@@ -1,0 +1,44 @@
+@charset "UTF-8";
+body{
+	/* padding-top : 74px; */
+	font-size : 14px;	
+}
+
+header{
+	/* position : fixed; */
+	width : 100%;
+	height : 74px;
+}
+
+footer{
+	width : 100%;
+	height : 117px;
+	border-top : solid 1px #cccccc;
+	position : absolute;
+	bottom: 0;
+}
+
+.page, .page ul {
+	text-align : center;
+    
+}
+.page, .page li {
+	display:inline-block;
+    
+}
+
+
+#footerDiv{
+	margin-top : 10px;
+	margin-bottom : 10px;
+	text-align : center;
+}
+
+#logo {
+	margin-left : 50px;
+}
+
+#sessionLog{
+	margin-right : 50px;
+}
+

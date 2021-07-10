@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="web.project.spring.ReservationMapper">
+	<!-- 결제 완료후 예약자 insert -->
+	<insert id="insert_reservation">
+		insert into ${reservation} (${reservation_no}, ${reservation_check_in}, ${reservation_check_out}, ${reservation_total_price}, ${reservation_hotel_no}, ${reservation_room_no}, ${reservation_user_id})
+		values (#{reservation_no}, #{reservation_check_in}, #{reservation_check_out}, #{reservation_total_price}, #{reservation_hotel_no}, #{reservation_room_no}, #{reservation_user_id})
+	</insert>
+	
+	<!-- join -->
+	<!-- 예약번호로 예약정보 검색(결제완료후 paySuccess페이지에 보여줘야함) -->
+ 	<resultMap type='HotelVO' id='HotelVO'>
+		<result column='hotel_no' property='hotel_no'/>
+		<result column='hotel_name' property='hotel_name'/>
+		<result column='hotel_addr' property='hotel_addr'/>
+	</resultMap>
+	
+	<resultMap type='RoomVO' id='RoomVO'>
+		<result column='room_no' property='room_no'/>
+		<result column='room_name' property='room_name'/>
+	</resultMap>
+
+	<resultMap type='ReviewVO' id='ReviewVO'>
+		<result column='review_no' property='review_no'/>
+		<result column='review_reservation_no' property='review_reservation_no'/>
+	</resultMap>
+	
+	
+	<resultMap type='ReservationVO' id='ReservationVO'>
+		<result column='reservation_no' property='reservation_no'/>
+		<result column='reservation_check_in' property='reservation_check_in'/>
+		<result column='reservation_check_out' property='reservation_check_out'/>
+		<result column='reservation_total_price' property='reservation_total_price'/>
+		<collection property='hotel_vo' resultMap='HotelVO'/>
+		<collection property='room_vo' resultMap='RoomVO'/>
+		<collection property='review_vo' resultMap='ReviewVO'/>
+	</resultMap>
+	
+	<select id="select_by_reservation_no" resultMap="ReservationVO">
+		select i.${hotel_no}, i.${hotel_name}, i.${hotel_addr}, ro.${room_no}, ro.${room_name}, r.${reservation_check_in}, r.${reservation_check_out}, r.${reservation_total_price} 
+		from ${reservation} r
+		join ${hotel_info} i
+		on i.${hotel_no} = r.${reservation_hotel_no}
+		join ${hotel_room} ro
+		on ro.${room_no} = r.${reservation_room_no}
+		where ${reservation_no} = #{reservation_no}
+	</select>
+	
+	<!-- user_id의 과거 예약목록 보여주기(오늘날짜 기준) -->
+	<select id="select_by_reservation_user_id_after_check_out" resultMap="ReservationVO">
+		select r.${reservation_no}, i.${hotel_no}, i.${hotel_name}, i.${hotel_addr}, r.${reservation_check_in}, r.${reservation_check_out}, ro.${room_no}, ro.${room_name}, r.${reservation_total_price}, re.${review_no}
+		from ${reservation} r
+			join ${hotel_info} i
+			on r.${reservation_hotel_no} = i.${hotel_no}
+			left outer join ${hotel_review} re
+			on r.${reservation_no} = re.${review_reservation_no}
+			join ${hotel_room} ro
+			on r.${reservation_room_no} = ro.${room_no}
+		where r.${reservation_user_id} = #{reservation_user_id} 
+			and r.${reservation_check_out} <![CDATA[<]]> SYSDATE
+		order by r.${reservation_check_out}	
+	</select>
+	
+	<!-- user_id의 예정된 예약목록 보여주기(오늘날짜 기준) -->
+	<select id="select_by_reservation_user_id_before_check_out" resultMap="ReservationVO">
+		select r.${reservation_no}, i.${hotel_name}, i.${hotel_addr}, r.${reservation_check_in}, r.${reservation_check_out}, ro.${room_name}, r.${reservation_total_price} 
+		from ${reservation} r
+		    join ${hotel_info} i
+		    on r.${reservation_hotel_no} = i.${hotel_no}
+		    join ${hotel_room} ro
+		    on r.${reservation_room_no} = ro.${room_no}
+		where r.${reservation_user_id} = #{reservation_user_id} 
+		    and r.${reservation_check_out} <![CDATA[>=]]> SYSDATE
+		order by r.${reservation_check_out}
+	</select>	
+	
+	<!-- 예약 취소시 예약정보 삭제 -->
+	<delete id="delete_reservation">
+		delete from ${reservation} where ${reservation_no} = #{reservation_no}
+	</delete>
+	
+</mapper>

@@ -53,7 +53,7 @@
     + 나의 리뷰 조회 / 수정 / 삭제
 ***
 
-<details>
+
   <summary>회원관리</summary>
   <div markdown="1">
 
@@ -78,7 +78,7 @@
 
 
   </div>
-</details>
+
 
   - ‘회원가입’ 기능
     + 정보입력시 ID는 Database의 PK값이므로 ajax 통해 중복체크 기능구현
@@ -92,7 +92,7 @@
   - ‘회원정보 수정 / 삭제’ 기능
     + 회원에 대한 개인정보가 변경되었을 경우 ID를 제외한 나머지 개인정보를 입력받아 Database의 해당 ID에 개인정보를 수정 / 회원탈퇴
 ***
-<details>
+
   <summary>호텔목록 게시판</summary>
   <div markdown="1">
 
@@ -114,7 +114,7 @@
 ![호텔 좋아요 기능](https://user-images.githubusercontent.com/81960642/125171329-a7495880-e1ee-11eb-9087-e5bbe969fa04.JPG)
 
   </div>
-</details>
+
 
   - ‘호텔목록조회(키워드 / 일정)’ 기능
     + 키워드 단어검색과 checkin / checkout일정을 통한 숙박가능한 호텔 조회
@@ -127,7 +127,7 @@
     + 호텔목록조회를 했을 경우 마음에 드는 호텔을 임시로 저장하고 싶은 경우 좋아요 기능을 통해 원하는 호텔을 하트표시를 통해 표시 할 수 있으면 좋아요 목록 또한 볼수 있도록 구현
 ***
 
-<details>
+
   <summary>호텔예약관리</summary>
   <div markdown="1">
 
@@ -145,7 +145,7 @@
 
 
   </div>
-</details>
+
 
   - ‘예약된 호텔’ 조회
     + 조회하는 날짜를 기준으로 REST Controller를 통해 해당 ID의 예약된 호텔목록 조회
@@ -156,7 +156,7 @@
   
 ***
 
-<details>
+
   <summary>호텔리뷰관리</summary>
   <div markdown="1">
 
@@ -170,7 +170,7 @@
 
 
   </div>
-</details>
+
 
   - ‘리뷰작성’ 기능
     + 리뷰를 작성하는 날짜가 해당호텔의 예약된 checkout 날짜가 이후 라면 해당호텔에 대한 사용자가 리뷰를 작성하도록 구현 (이미지 업로드 기능 구현)
